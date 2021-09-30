@@ -9,10 +9,10 @@ enum HorizontalLegendPosition {
   end,
 }
 
-typedef AxisValueFromValue = String Function(int value);
+typedef AxisValueFromValue = String Function(num value);
 
 /// Default axis generator, it will just take current index, convert it to string and return it.
-String defaultAxisValue(int index) => '$index';
+String defaultAxisValue(num index) => '$index';
 
 /// Decoration for drawing horizontal lines on the chart, decoration can add horizontal axis legend
 ///
@@ -35,6 +35,7 @@ class HorizontalAxisDecoration extends DecorationPainter {
     this.axisStep = 1.0,
     this.legendPosition = HorizontalLegendPosition.end,
     this.legendFontStyle = const TextStyle(fontSize: 13.0),
+    this.labelWidth
   }) : _endWithChart = endWithChart ? 1.0 : 0.0;
 
   HorizontalAxisDecoration._lerp({
@@ -52,6 +53,7 @@ class HorizontalAxisDecoration extends DecorationPainter {
     this.axisValue = defaultAxisValue,
     this.legendPosition = HorizontalLegendPosition.end,
     this.legendFontStyle = const TextStyle(fontSize: 13.0),
+    this.labelWidth
   }) : _endWithChart = endWithChart;
 
   /// This decoration can continue beyond padding set by [ChartState]
@@ -105,6 +107,9 @@ class HorizontalAxisDecoration extends DecorationPainter {
   /// Text style for axis legend
   final TextStyle? legendFontStyle;
 
+  /// Max width of label
+  final double? labelWidth;
+
   String? _longestText;
 
   @override
@@ -152,8 +157,7 @@ class HorizontalAxisDecoration extends DecorationPainter {
       if (!showTopValue && i == _maxValue / axisStep) {
         _text = null;
       } else {
-        final _defaultValue = (axisStep * i + state.data.minValue).toInt();
-        final _value = axisValue.call(_defaultValue);
+        final _value = axisValue.call(axisStep * i + state.data.minValue);
         _text = _value.toString();
       }
 
@@ -161,7 +165,7 @@ class HorizontalAxisDecoration extends DecorationPainter {
         continue;
       }
 
-      final _width = _textWidth(_longestText, legendFontStyle);
+      final _width = labelWidth ?? _textWidth(_longestText, legendFontStyle);
       final _textPainter = TextPainter(
         text: TextSpan(
           text: _text,
@@ -177,7 +181,7 @@ class HorizontalAxisDecoration extends DecorationPainter {
 
       final _positionEnd = (size.width - state.defaultMargin.right) -
           _textPainter.width -
-          (valuesPadding?.right ?? 0.0);
+          (valuesPadding?.right ?? 0.0) + (valuesPadding?.left ?? 0.0);
       final _positionStart =
           state.defaultMargin.left + (valuesPadding?.left ?? 0.0);
 
@@ -246,7 +250,7 @@ class HorizontalAxisDecoration extends DecorationPainter {
 
   @override
   EdgeInsets paddingNeeded() {
-    final _maxTextWidth = _textWidth(_longestText, legendFontStyle) +
+    final _maxTextWidth = labelWidth ?? _textWidth(_longestText, legendFontStyle) +
         (valuesPadding?.horizontal ?? 0.0);
     final _isEnd = legendPosition == HorizontalLegendPosition.end;
 

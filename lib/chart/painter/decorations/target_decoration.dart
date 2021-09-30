@@ -55,7 +55,8 @@ class TargetLineDecoration extends DecorationPainter {
     this.targetLineColor = Colors.red,
     this.lineWidth = 2.0,
     this.isTargetInclusive = true,
-  });
+    bool endWithChart = false,
+  }): _endWithChart = endWithChart ? 1.0 : 0.0;
 
   /// Dash pattern for the line, if left empty line will be solid
   final List<double>? dashArray;
@@ -76,6 +77,8 @@ class TargetLineDecoration extends DecorationPainter {
 
   /// Color item should take once target is missed
   final Color? colorOverTarget;
+
+  final double _endWithChart;
 
   /// Return [ColorForValue] set up to pair with this decoration
   ///
@@ -105,6 +108,8 @@ class TargetLineDecoration extends DecorationPainter {
     canvas.save();
     canvas.translate(state.defaultPadding.left + state.defaultMargin.left,
         size.height + state.defaultMargin.top);
+
+    size = (state.defaultPadding * _endWithChart).deflateSize(size);
 
     final _path = Path()
       ..moveTo(0.0, -scale * target! + _minValue)

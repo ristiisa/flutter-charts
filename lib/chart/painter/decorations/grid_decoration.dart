@@ -21,6 +21,7 @@ class GridDecoration extends DecorationPainter {
     this.horizontalAxisUnit,
     this.verticalAxisValueFromIndex = defaultAxisValue,
     this.horizontalAxisValueFromValue = defaultAxisValue,
+    this.horizontalAxisLabelWidth,
     this.gridColor = Colors.grey,
     this.gridWidth = 1.0,
     this.dashArray,
@@ -44,6 +45,7 @@ class GridDecoration extends DecorationPainter {
       valuesPadding: horizontalValuesPadding,
       showTopValue: showTopHorizontalValue,
       horizontalAxisUnit: horizontalAxisUnit,
+      labelWidth: horizontalAxisLabelWidth,
       lineColor: gridColor,
       dashArray: dashArray,
       lineWidth: gridWidth,
@@ -82,6 +84,7 @@ class GridDecoration extends DecorationPainter {
     this.horizontalAxisUnit,
     this.verticalAxisValueFromIndex = defaultAxisValue,
     this.horizontalAxisValueFromValue = defaultAxisValue,
+    this.horizontalAxisLabelWidth,
     this.gridColor = Colors.grey,
     this.gridWidth = 1.0,
     this.verticalAxisStep = 1,
@@ -104,6 +107,7 @@ class GridDecoration extends DecorationPainter {
       showTopValue: showTopHorizontalValue,
       showLines: showHorizontalGrid,
       horizontalAxisUnit: horizontalAxisUnit,
+      labelWidth: horizontalAxisLabelWidth,
       valuesPadding: horizontalValuesPadding,
       lineColor: gridColor,
       dashArray: dashArray,
@@ -210,6 +214,8 @@ class GridDecoration extends DecorationPainter {
 
   /// Change step for x axis (1 by default) used in [GridDecoration], [VerticalAxisDecoration] and [HorizontalAxisDecoration]
   final double horizontalAxisStep;
+
+  final double? horizontalAxisLabelWidth;
 
   @override
   void draw(Canvas canvas, Size size, ChartState state) {
